@@ -1,6 +1,7 @@
 import pygame
 
 pygame.init()
+clock = pygame.time.Clock()
 blocos = []
 janela = pygame.display.set_mode((0,0))
 pygame.display.set_caption("minecraft")
@@ -29,6 +30,9 @@ flor = pygame.transform.scale(flor,(100,100))
 id = tronco
 hotbar = {49:tronco,50:tabua,51:pedra,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor}
 em_execuçao = True
+frame = 0
+offset_x = 0
+offset_y = 0
 while em_execuçao:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -37,22 +41,27 @@ while em_execuçao:
             try:
                 id = hotbar[event.key]
             except:
-                print(event.key)
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT: 
-            for bloco in blocos:
-                bloco[1] += 100
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
-            for bloco in blocos:
-                bloco[1] -= 100
+                pass
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            blocos.append([id,round(event.pos[0],-2),round(event.pos[1],-2)])
+            blocos.append([id,event.pos[0] // 100 * 100,event.pos[1] // 100 * 100])
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
-            for bloco in blocos:
-                if bloco[1] == round(event.pos[0],-2) and bloco[2] == round(event.pos[1],-2):
+            for bloco in blocos[::-1]:
+                if bloco[1] == event.pos[0] // 100 * 100 and bloco[2] == event.pos[1] // 100 * 100:
                     blocos.remove(bloco)
+                    break
+    teclas = pygame.key.get_pressed()
+    if teclas[pygame.K_LEFT]:
+        for bloco in blocos:
+            bloco[1] += 100
+    if teclas[pygame.K_RIGHT]:
+        for bloco in blocos:
+            bloco[1] -= 100
     janela.fill((0,255,0))
     janela.blit(fundo)
     for bloco in blocos:
         janela.blit(bloco[0],(bloco[1],bloco[2]))
     janela.blit(texto,(0,0))
     pygame.display.flip()
+    clock.tick(60)
+    frame += 1
+    frame %= 60
