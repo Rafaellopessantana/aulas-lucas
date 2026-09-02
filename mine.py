@@ -1,6 +1,12 @@
-import pygame,json
+import pygame,json,time
 
 pygame.init()
+pygame.mixer.init()
+pygame.mixer.music.load("sons mine/musica.mp3")
+pygame.mixer.music.play(-1)
+som_colocar = pygame.mixer.Sound("sons mine/colocar bloco.mp3")
+fechar = pygame.mixer.Sound("sons mine/fechar.mp3")
+som_secreto = pygame.mixer.Sound("sons mine/som secreto.mp3")
 clock = pygame.time.Clock()
 blocos = []
 bloco = 0
@@ -48,16 +54,21 @@ segredo = pygame.image.load("blocos/segredo.png")
 segredo = pygame.transform.scale(segredo,(100,100))
 mao = pygame.image.load("blocos/mao.webp")
 mao = pygame.transform.scale(mao,(200,200))
-id = 0
+mostrar = True
+id = 49
 itens = 0
 em_execuçao = True
 frame = 1
 offset_x = 0
 offset_y = 0
 hotbar = [{49:tronco,50:tabua,51:pedra,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:muda,48:mao}]
+posiçao = 0
+atuadores = {muda:[600,[[tronco,0,0],[tronco,0,-1]]]}
 while em_execuçao:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            fechar.play()
+            time.sleep(3)
             em_execuçao = False
         if event.type == pygame.KEYDOWN:
             try:
@@ -66,12 +77,22 @@ while em_execuçao:
             except:
                 pass
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            blocos.append([id,event.pos[0] // 100 * 100 + offset_x,event.pos[1] // 100 * 100 + offset_y,itens,frame])
+            if id == 48 and itens == 0:
+                som_secreto.play()
+            else:
+                som_colocar.play()
+            blocos.append([id,event.pos[0] // 100 * 100 + offset_x,event.pos[1] // 100 * 100 + offset_y,itens,posiçao,frame,atuadores.get(hotbar[itens][id])])
+            posiçao += 1
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
             for bloco in blocos[::-1]:
                 if bloco[1] == event.pos[0] // 100 * 100 + offset_x and bloco[2] == event.pos[1] // 100 * 100 + offset_y:
                     blocos.remove(bloco)
                     break
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            if mostrar:
+                mostrar = False
+            else:
+                mostrar = True
         if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
             itens += 1
             if itens >= len(hotbar):
@@ -96,9 +117,14 @@ while em_execuçao:
     janela.blit(fundos[fundo])
     for bloco in blocos:
         janela.blit(hotbar[bloco[3]][bloco[0]],(bloco[1] - offset_x,bloco[2] - offset_y))
-    janela.blit(texto[itens],(0,0))
-    janela.blit(mao,(tamanho_janela[0]-200,tamanho_janela[1]-200))
-    if frame % 72000 == 0:
+        if bloco[6] :
+            if frame >= bloco[4] + bloco[6][0]:
+                for b in bloco[6][1]:
+                    janela.blit(b[0],(bloco[1] + b[1]- offset_x,bloco[2] + b[2]- offset_y))
+    if mostrar:
+        janela.blit(texto[itens],(0,0))
+        janela.blit(mao,(tamanho_janela[0]-200,tamanho_janela[1]-200))
+    if frame % 7200 == 0:
         fundo += 1
         if fundo >= len(fundos):
             fundo = 0
