@@ -1,4 +1,4 @@
-import pygame,json,time
+import pygame,json,time,random
 
 pygame.init()
 pygame.mixer.init()
@@ -7,6 +7,8 @@ pygame.mixer.music.play(-1)
 som_colocar = pygame.mixer.Sound("sons mine/colocar bloco.mp3")
 fechar = pygame.mixer.Sound("sons mine/fechar.mp3")
 som_secreto = pygame.mixer.Sound("sons mine/som secreto.mp3")
+botao = pygame.mixer.Sound("sons mine/botao.mp3")
+menu = pygame.mixer.Sound("sons mine/menu.mp3")
 clock = pygame.time.Clock()
 blocos = []
 bloco = 0
@@ -19,8 +21,32 @@ dia = pygame.image.load("blocos/dia.jpg")
 dia = pygame.transform.scale(dia,tamanho_janela)
 noite = pygame.image.load("blocos/noite.png")
 noite = pygame.transform.scale(noite,tamanho_janela)
+fundo_menu_1 = pygame.image.load("blocos/plano de fundo 1.png")
+fundo_menu_1 = pygame.transform.scale(fundo_menu_1,(tamanho_janela))
+fundo_menu_2 = pygame.image.load("blocos/plano de fundo 2.webp")
+fundo_menu_2 = pygame.transform.scale(fundo_menu_2,(tamanho_janela))
+fundo_menu_3 = pygame.image.load("blocos/plano de fundo 3.webp")
+fundo_menu_3 = pygame.transform.scale(fundo_menu_3,(tamanho_janela))
+fundo_menu_4 = pygame.image.load("blocos/plano de fundo 4.png")
+fundo_menu_4 = pygame.transform.scale(fundo_menu_4,(tamanho_janela))
+chance = random.randint(1,10000)
+if chance <= 4000:
+    fundo_menu = fundo_menu_1
+elif chance <= 8000:
+    fundo_menu = fundo_menu_2
+elif chance <= 9999:
+    fundo_menu = fundo_menu_3
+else:
+    fundo_menu = fundo_menu_4
 fundos = [dia,noite]
 fundo = 0
+começar = False
+criar = pygame.image.load("blocos/criar.png")
+criar = pygame.transform.scale(criar,(tamanho_janela[0],tamanho_janela[1] // 2))
+abrir = pygame.image.load("blocos/abrir.png")
+abrir = pygame.transform.scale(abrir,(tamanho_janela[0],tamanho_janela[1] // 2))
+salvar = pygame.image.load("blocos/salvar.png")
+salvar = pygame.transform.scale(salvar,(tamanho_janela[0],tamanho_janela[1] // 2))
 tronco = pygame.image.load("blocos/tronco.jpg")
 tronco = pygame.transform.scale(tronco,(100,100))
 tabua = pygame.image.load("blocos/tabua.webp")
@@ -63,8 +89,30 @@ offset_x = 0
 offset_y = 0
 hotbar = [{49:tronco,50:tabua,51:pedra,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:muda,48:mao}]
 posiçao = 0
-atuadores = {muda:[600,[[tronco,0,0],[tronco,0,-1]]]}
+menu.play()
 while em_execuçao:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            fechar.play()
+            time.sleep(3)
+            em_execuçao = False
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and event.pos[1] <= tamanho_janela[1] // 2:
+            botao.play()
+            começar = True
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and event.pos[1] >= tamanho_janela[1] // 2:
+            with open("mundo.json","r") as f:
+                botao.play()
+                blocos = json.loads(f.read())
+                começar = True
+    janela.fill((0,0,0))
+    janela.blit(fundo_menu,(0,0))
+    janela.blit(criar,(0,0))
+    janela.blit(abrir,(0,tamanho_janela[1] // 2))
+    pygame.display.flip()
+    if começar:
+        break
+while em_execuçao:
+    começar = False
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             fechar.play()
@@ -81,7 +129,7 @@ while em_execuçao:
                 som_secreto.play()
             else:
                 som_colocar.play()
-            blocos.append([id,event.pos[0] // 100 * 100 + offset_x,event.pos[1] // 100 * 100 + offset_y,itens,posiçao,frame,atuadores.get(hotbar[itens][id])])
+            blocos.append([id,event.pos[0] // 100 * 100 + offset_x,event.pos[1] // 100 * 100 + offset_y,itens,posiçao,frame])
             posiçao += 1
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
             for bloco in blocos[::-1]:
@@ -98,12 +146,27 @@ while em_execuçao:
             if itens >= len(hotbar):
                 itens = 0
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:  
-            try:
-                with open("mundo.json","r") as f:
-                    blocos = json.loads(f.read())
-            except:
-                with open("mundo.json","w") as f:
-                    f.write(json.dumps(blocos,indent=4))
+            menu.play()
+            while em_execuçao:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        fechar.play()
+                        time.sleep(3)
+                        em_execuçao = False
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and event.pos[1] <= tamanho_janela[1] // 2:
+                        blocos = []
+                        botao.play()
+                        começar = True
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and event.pos[1] >= tamanho_janela[1] // 2:
+                            with open("mundo.json","w") as f:
+                                f.write(json.dumps(blocos,indent=4))
+                            botao.play()
+                            começar = True
+                janela.blit(criar,(0,0))
+                janela.blit(salvar,(0,tamanho_janela[1] // 2))
+                pygame.display.flip()
+                if começar:
+                    break
     teclas = pygame.key.get_pressed()
     if teclas[pygame.K_LEFT] and frame % 10 == 00:
         offset_x -= 100
@@ -117,10 +180,6 @@ while em_execuçao:
     janela.blit(fundos[fundo])
     for bloco in blocos:
         janela.blit(hotbar[bloco[3]][bloco[0]],(bloco[1] - offset_x,bloco[2] - offset_y))
-        if bloco[6] :
-            if frame >= bloco[4] + bloco[6][0]:
-                for b in bloco[6][1]:
-                    janela.blit(b[0],(bloco[1] + b[1]- offset_x,bloco[2] + b[2]- offset_y))
     if mostrar:
         janela.blit(texto[itens],(0,0))
         janela.blit(mao,(tamanho_janela[0]-200,tamanho_janela[1]-200))
