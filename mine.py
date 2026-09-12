@@ -4,9 +4,11 @@ pygame.init()
 pygame.mixer.init()
 pygame.mixer.music.load("sons mine/musica.mp3")
 pygame.mixer.music.play(-1)
-som_colocar = pygame.mixer.Sound("sons mine/colocar bloco.mp3")
+colocar = pygame.mixer.Sound("sons mine/colocar.mp3")
+quebrar = pygame.mixer.Sound("sons mine/quebrar.mp3")
 fechar = pygame.mixer.Sound("sons mine/fechar.mp3")
 som_secreto = pygame.mixer.Sound("sons mine/som secreto.mp3")
+som_secreto_2 = pygame.mixer.Sound("sons mine/som secreto 2.mp3")
 botao = pygame.mixer.Sound("sons mine/botao.mp3")
 menu = pygame.mixer.Sound("sons mine/menu.mp3")
 clock = pygame.time.Clock()
@@ -16,11 +18,13 @@ janela = pygame.display.set_mode((0,0))
 tamanho_janela = pygame.display.get_window_size()
 pygame.display.set_caption("minecraft")
 fonte = pygame.font.SysFont(None,48)
-texto = [fonte.render("1-tronco\n2-tabuas\n3-pedra\n4-folha\n5-tijolo\n6-porta\n7-vidro\n8-terra\n9-flor\ne-trocar inventario",True,(255,0,0)),fonte.render("1-crafting table\n2-fornalha\n3-bau\n4-bau duplo\n5-bedrock\ne-trocar inventario",True,(255,0,0))]
+texto = [fonte.render("1-tronco\n2-tabuas\n3-pedra\n4-folha\n5-tijolo\n6-porta\n7-vidro\n8-terra\n9-flor\ne-trocar inventario",True,(255,0,0)),fonte.render("1-crafting table\n2-fornalha\n3-bau\n4-bau duplo\n5-bedrock\n6-obsidian\n7-terra\ne-trocar inventario",True,(255,0,0))]
 dia = pygame.image.load("blocos/dia.jpg")
 dia = pygame.transform.scale(dia,tamanho_janela)
 noite = pygame.image.load("blocos/noite.png")
 noite = pygame.transform.scale(noite,tamanho_janela)
+mine = pygame.image.load("blocos/mine.png")
+mine = pygame.transform.scale(mine,(tamanho_janela[0],tamanho_janela[1] // 4.7))
 fundo_menu_1 = pygame.image.load("blocos/plano de fundo 1.png")
 fundo_menu_1 = pygame.transform.scale(fundo_menu_1,(tamanho_janela))
 fundo_menu_2 = pygame.image.load("blocos/plano de fundo 2.webp")
@@ -74,8 +78,10 @@ bau = pygame.transform.scale(bau,(100,100))
 bau_duplo = pygame.transform.scale(bau,(200,100))
 bedrock = pygame.image.load("blocos/bedrock.jfif")
 bedrock = pygame.transform.scale(bedrock,(100,100))
-muda = pygame.image.load("blocos/muda.png")
-muda = pygame.transform.scale(muda,(100,100))
+obsidian = pygame.image.load("blocos/obsidian.jpg")
+obsidian = pygame.transform.scale(obsidian,(100,100))
+grama = pygame.image.load("blocos/grama.jfif")
+grama = pygame.transform.scale(grama,(100,100))
 segredo = pygame.image.load("blocos/segredo.png")
 segredo = pygame.transform.scale(segredo,(100,100))
 mao = pygame.image.load("blocos/mao.webp")
@@ -87,7 +93,7 @@ em_execuçao = True
 frame = 1
 offset_x = 0
 offset_y = 0
-hotbar = [{49:tronco,50:tabua,51:pedra,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:muda,48:mao}]
+hotbar = [{49:tronco,50:tabua,51:pedra,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:obsidian,48:mao}]
 posiçao = 0
 menu.play()
 while em_execuçao:
@@ -107,6 +113,7 @@ while em_execuçao:
     janela.fill((0,0,0))
     janela.blit(fundo_menu,(0,0))
     janela.blit(criar,(0,0))
+    janela.blit(mine,(0,0))
     janela.blit(abrir,(0,tamanho_janela[1] // 2))
     pygame.display.flip()
     if começar:
@@ -128,12 +135,16 @@ while em_execuçao:
             if id == 48 and itens == 0:
                 som_secreto.play()
             else:
-                som_colocar.play()
+                colocar.play()
             blocos.append([id,event.pos[0] // 100 * 100 + offset_x,event.pos[1] // 100 * 100 + offset_y,itens,posiçao,frame])
             posiçao += 1
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
             for bloco in blocos[::-1]:
                 if bloco[1] == event.pos[0] // 100 * 100 + offset_x and bloco[2] == event.pos[1] // 100 * 100 + offset_y:
+                    if bloco[0] == 48:
+                        som_secreto_2.play()
+                    else:
+                        quebrar.play()
                     blocos.remove(bloco)
                     break
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
@@ -162,7 +173,10 @@ while em_execuçao:
                                 f.write(json.dumps(blocos,indent=4))
                             botao.play()
                             começar = True
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
+                        começar = True
                 janela.blit(criar,(0,0))
+                janela.blit(mine,(0,0))
                 janela.blit(salvar,(0,tamanho_janela[1] // 2))
                 pygame.display.flip()
                 if começar:
