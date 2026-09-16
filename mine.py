@@ -16,9 +16,9 @@ blocos = []
 bloco = 0
 janela = pygame.display.set_mode((0,0))
 tamanho_janela = pygame.display.get_window_size()
-pygame.display.set_caption("minecraft")
+pygame.display.set_caption("minecraft rafa edition")
 fonte = pygame.font.SysFont(None,48)
-texto = [fonte.render("1-tronco\n2-tabuas\n3-pedra\n4-folha\n5-tijolo\n6-porta\n7-vidro\n8-terra\n9-flor\ne-trocar inventario",True,(255,0,0)),fonte.render("1-crafting table\n2-fornalha\n3-bau\n4-bau duplo\n5-bedrock\n6-obsidian\n7-terra\ne-trocar inventario",True,(255,0,0))]
+texto = [fonte.render("1-tronco\n2-tabuas\n3-pedra\n4-folha\n5-tijolo\n6-porta\n7-vidro\n8-terra\n9-flor\ne-trocar inventario",True,(255,0,0)),fonte.render("1-crafting table\n2-fornalha\n3-bau\n4-bau duplo\n5-bedrock\n6-obsidian\n7-terra\n8-pedra\ne-trocar inventario",True,(255,0,0))]
 dia = pygame.image.load("blocos/dia.jpg")
 dia = pygame.transform.scale(dia,tamanho_janela)
 noite = pygame.image.load("blocos/noite.png")
@@ -55,13 +55,13 @@ tronco = pygame.image.load("blocos/tronco.jpg")
 tronco = pygame.transform.scale(tronco,(100,100))
 tabua = pygame.image.load("blocos/tabua.webp")
 tabua = pygame.transform.scale(tabua,(100,100))
-pedra = pygame.image.load("blocos/pedra.jpg")
-pedra = pygame.transform.scale(pedra,(100,100))
+pedregulho = pygame.image.load("blocos/pedregulho.jpg")
+pedregulho = pygame.transform.scale(pedregulho,(100,100))
 folha = pygame.image.load("blocos/folha.png")
 folha = pygame.transform.scale(folha,(100,100))
 tijolo = pygame.image.load("blocos/tijolo.webp")
 tijolo = pygame.transform.scale(tijolo,(100,100))
-porta = pygame.image.load("blocos/porta.jpg")
+porta = pygame.image.load("blocos/porta.png")
 porta = pygame.transform.scale(porta,(100,200))
 vidro = pygame.image.load("blocos/vidro.webp")
 vidro = pygame.transform.scale(vidro,(100,100))
@@ -82,6 +82,8 @@ obsidian = pygame.image.load("blocos/obsidian.jpg")
 obsidian = pygame.transform.scale(obsidian,(100,100))
 grama = pygame.image.load("blocos/grama.jfif")
 grama = pygame.transform.scale(grama,(100,100))
+pedra = pygame.image.load("blocos/pedra.jpg")
+pedra = pygame.transform.scale(pedra,(100,100))
 segredo = pygame.image.load("blocos/segredo.png")
 segredo = pygame.transform.scale(segredo,(100,100))
 mao = pygame.image.load("blocos/mao.webp")
@@ -93,7 +95,7 @@ em_execuçao = True
 frame = 1
 offset_x = 0
 offset_y = 0
-hotbar = [{49:tronco,50:tabua,51:pedra,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:obsidian,48:mao}]
+hotbar = [{49:tronco,50:tabua,51:pedregulho,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:obsidian,55:grama,56:pedra,48:mao}]
 posiçao = 0
 menu.play()
 while em_execuçao:
@@ -190,8 +192,8 @@ while em_execuçao:
         offset_y -= 100
     if teclas[pygame.K_DOWN] and frame % 10 == 00:
         offset_y += 100
-    janela.fill((0,255,0))
-    janela.blit(fundos[fundo])
+    janela.fill((0,0,255))
+    janela.blit(fundos[fundo],(0,offset_y))
     for bloco in blocos:
         janela.blit(hotbar[bloco[3]][bloco[0]],(bloco[1] - offset_x,bloco[2] - offset_y))
     if mostrar:
