@@ -12,15 +12,21 @@ som_secreto_2 = pygame.mixer.Sound("sons mine/som secreto 2.mp3")
 botao = pygame.mixer.Sound("sons mine/botao.mp3")
 menu = pygame.mixer.Sound("sons mine/menu.mp3")
 clock = pygame.time.Clock()
-blocos = []
+seed1 = [[56, 0, 700, 0, 15, 2018], [56, 100, 700, 0, 16, 2068], [56, 200, 700, 0, 17, 2090], [56, 300, 700, 0, 18, 2116], [56, 400, 700, 0, 19, 2151], [56, 600, 700, 0, 21, 2218], [56, 700, 700, 0, 22, 2257], [56, 800, 700, 0, 23, 2291], [56, 900, 700, 0, 24, 2321], [56, 1000, 700, 0, 25, 2357], [56, 1100, 700, 0, 26, 2388], [56, 1200, 700, 0, 27, 2425], [56, 1300, 700, 0, 28, 2453], [56, 1400, 700, 0, 29, 2533], [56, 1500, 700, 0, 30, 2575], [56, 1600, 700, 0, 31, 2622], [56, 1700, 700, 0, 32, 2661], [56, 1800, 700, 0, 33, 2699], [56, 1900, 700, 0, 34, 2741], [56, 0, 600, 0, 35, 2964], [56, 100, 600, 0, 36, 3046], [56, 200, 600, 0, 37, 3070], [56, 600, 600, 0, 41, 3156], [56, 700, 600, 0, 42, 3188], [56, 800, 600, 0, 43, 3231], [56, 900, 600, 0, 44, 3259], [56, 1000, 600, 0, 45, 3285], [56, 1100, 600, 0, 46, 3309], [56, 1200, 600, 0, 47, 3330], [56, 1300, 600, 0, 48, 3352], [55, 0, 500, 1, 49, 3794], [55, 0, 500, 1, 50, 3799], [55, 100, 500, 1, 51, 3831], [55, 200, 500, 1, 52, 3871], [55, 600, 500, 1, 56, 4034], [55, 700, 500, 1, 57, 4060], [55, 800, 500, 1, 58, 4085], [55, 900, 500, 1, 59, 4110], [55, 1000, 500, 1, 60, 4129], [55, 1100, 500, 1, 61, 4157], [56, 1400, 600, 0, 64, 5291], [56, 1500, 600, 0, 65, 5393], [56, 1600, 600, 0, 66, 5423], [56, 1700, 600, 0, 67, 5480], [56, 1800, 600, 0, 68, 5505], [56, 1900, 600, 0, 69, 5529], [56, 1200, 500, 0, 70, 5710], [56, 1300, 400, 0, 71, 5781], [56, 1400, 400, 0, 73, 5881], [56, 1400, 500, 0, 74, 5913], [56, 1300, 500, 0, 75, 5941], [56, 1500, 500, 0, 76, 5988], [56, 1500, 400, 0, 77, 6011], [56, 1600, 400, 0, 78, 6111], [56, 1700, 300, 0, 80, 6228], [56, 1700, 300, 0, 81, 6232], [56, 1800, 200, 0, 82, 6302], [56, 1800, 300, 0, 83, 6337], [56, 1800, 400, 0, 84, 6364], [56, 1800, 500, 0, 85, 6392], [56, 1700, 400, 0, 86, 6424], [56, 1700, 500, 0, 87, 6442], [56, 1600, 500, 0, 88, 6472], [55, 1900, 500, 1, 89, 6945], [55, 1800, 100, 1, 90, 7014], [55, 1700, 200, 1, 91, 7059], [55, 1600, 300, 1, 92, 7101], [55, 1500, 300, 1, 93, 7133], [55, 1300, 300, 1, 96, 7296], [55, 1200, 400, 1, 97, 7340], [55, 1400, 300, 1, 99, 7856], [55, 300, 600, 1, 100, 8328], [55, 400, 600, 1, 101, 8360], [56, 500, 700, 0, 105, 9062], [55, 500, 600, 1, 106, 9272], [57, 100, 400, 0, 109, 11409], [57, 900, 400, 0, 110, 11557], [57, 800, 400, 0, 111, 11585], [57, 400, 500, 0, 112, 11652]]
+seed2 = [[56, 0, 600, 0, 1, 879], [56, 100, 600, 0, 2, 935], [56, 200, 600, 0, 4, 993], [56, 300, 600, 0, 6, 1029], [56, 400, 600, 0, 8, 1067], [56, 500, 600, 0, 12, 1171], [56, 700, 600, 0, 13, 1196], [56, 900, 600, 0, 14, 1226], [56, 1300, 600, 0, 15, 1267], [56, 1200, 600, 0, 16, 1289], [56, 1100, 600, 0, 17, 1312], [56, 1000, 600, 0, 18, 1337], [56, 800, 600, 0, 19, 1366], [56, 700, 600, 0, 20, 1397], [56, 600, 600, 0, 21, 1417], [56, 0, 700, 0, 22, 2119], [56, 100, 700, 0, 23, 2152], [56, 200, 700, 0, 24, 2187], [56, 400, 700, 0, 25, 2213], [56, 300, 700, 0, 26, 2254], [56, 500, 700, 0, 27, 2291], [56, 600, 700, 0, 28, 2326], [56, 700, 700, 0, 29, 2365], [56, 800, 700, 0, 30, 2395], [56, 900, 700, 0, 31, 2430], [56, 1000, 700, 0, 32, 2464], [56, 1100, 700, 0, 33, 2507], [56, 1200, 700, 0, 34, 2550], [56, 1300, 700, 0, 35, 2580], [56, 1400, 700, 0, 36, 2671], [56, 1400, 600, 0, 37, 2704], [56, 1500, 700, 0, 38, 2752], [56, 1500, 600, 0, 39, 2775], [56, 1600, 700, 0, 40, 2817], [56, 1600, 600, 0, 41, 2841], [55, 0, 500, 1, 43, 3843], [55, 100, 500, 1, 44, 3899], [55, 200, 500, 1, 45, 4020], [55, 300, 500, 1, 46, 4059], [55, 400, 500, 1, 47, 4102], [55, 500, 500, 1, 48, 4138], [55, 600, 500, 1, 49, 4177], [55, 700, 500, 1, 50, 4213], [55, 800, 500, 1, 51, 4291], [55, 1000, 500, 1, 52, 4348], [55, 900, 500, 1, 53, 4389], [55, 1100, 500, 1, 54, 4422], [55, 1200, 500, 1, 55, 4448], [55, 1300, 500, 1, 56, 4486], [55, 1400, 500, 1, 57, 4518], [55, 1500, 500, 1, 58, 4549], [55, 1600, 500, 1, 59, 4582]]
+seeds = [seed1,seed2]
+blocos = seeds[random.randint(0,len(seeds)-1)]
+visitados_x = []
+for x in range(0,20):
+    visitados_x.append(x*100)
 bloco = 0
 janela = pygame.display.set_mode((0,0))
 tamanho_janela = pygame.display.get_window_size()
 pygame.display.set_caption("minecraft rafa edition")
 fonte = pygame.font.SysFont(None,48)
 texto = [fonte.render("1-tronco\n2-tabuas\n3-pedra\n4-folha\n5-tijolo\n6-porta\n7-vidro\n8-terra\n9-flor\ne-trocar inventario",True,(255,0,0)),fonte.render("1-crafting table\n2-fornalha\n3-bau\n4-bau duplo\n5-bedrock\n6-obsidian\n7-terra\n8-pedra\ne-trocar inventario",True,(255,0,0))]
-dia = pygame.image.load("blocos/dia.jpg")
-dia = pygame.transform.scale(dia,tamanho_janela)
+dia = pygame.image.load("blocos/fundo 2.png")
+dia = pygame.transform.scale(dia,(tamanho_janela[0],tamanho_janela[1] * 5))
 noite = pygame.image.load("blocos/noite.png")
 noite = pygame.transform.scale(noite,tamanho_janela)
 mine = pygame.image.load("blocos/mine.png")
@@ -172,7 +178,7 @@ while em_execuçao:
                         começar = True
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and event.pos[1] >= tamanho_janela[1] // 2:
                             with open("mundo.json","w") as f:
-                                f.write(json.dumps(blocos,indent=4))
+                                f.write(json.dumps(blocos))
                             botao.play()
                             começar = True
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
@@ -186,8 +192,30 @@ while em_execuçao:
     teclas = pygame.key.get_pressed()
     if teclas[pygame.K_LEFT] and frame % 10 == 00:
         offset_x -= 100
+        if offset_x not in visitados_x:
+            visitados_x.append(offset_x)
+            tamanho = random.randint(2,5)
+            for y in range(tamanho+1):
+                if y < tamanho:
+                  blocos.append([56,offset_x // 100 * 100,(tamanho_janela[1] + (tamanho_janela[1] - (100 * y)) - 800) // 100 * 100,0,posiçao,frame])  
+                else:
+                    blocos.append([55,offset_x // 100 * 100,(tamanho_janela[1] + (tamanho_janela[1] - (100 * y)) - 800) // 100 * 100,1,posiçao,frame])
+            if random.randint(1,3) == 3:
+                blocos.append([57,offset_x // 100 * 100,(tamanho_janela[1] + (tamanho_janela[1] - (100 * y)) - 900) // 100 * 100,0,posiçao,frame])  
     if teclas[pygame.K_RIGHT] and frame % 10 == 00:
-        offset_x += 100
+        for x in range(0,20):
+            offset_x += 100
+            if offset_x not in visitados_x:
+                visitados_x.append(offset_x)
+                tamanho = random.randint(2,5)
+                for y in range(tamanho+1):
+                    if y < tamanho:
+                        blocos.append([56,offset_x // 100 * 100,(tamanho_janela[1] + (tamanho_janela[1] - (100 * y)) - 800) // 100 * 100,0,posiçao,frame])  
+                    else:
+                        blocos.append([55,offset_x // 100 * 100,(tamanho_janela[1] + (tamanho_janela[1] - (100 * y)) - 800) // 100 * 100,1,posiçao,frame])
+                if random.randint(1,3) == 3:
+                    blocos.append([57,offset_x // 100 * 100,(tamanho_janela[1] + (tamanho_janela[1] - (100 * y)) - 900) // 100 * 100,0,posiçao,frame])  
+        offset_x -= 1900
     if teclas[pygame.K_UP] and frame % 10 == 00:
         offset_y -= 100
     if teclas[pygame.K_DOWN] and frame % 10 == 00:
