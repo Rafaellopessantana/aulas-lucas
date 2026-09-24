@@ -4,6 +4,9 @@ pygame.init()
 pygame.mixer.init()
 pygame.mixer.music.load("sons mine/musica.mp3")
 pygame.mixer.music.play(-1)
+janela = pygame.display.set_mode((0,0))
+tamanho_janela = pygame.display.get_window_size()
+pygame.display.set_caption("minecraft rafa edition")
 colocar = pygame.mixer.Sound("sons mine/colocar.mp3")
 quebrar = pygame.mixer.Sound("sons mine/quebrar.mp3")
 fechar = pygame.mixer.Sound("sons mine/fechar.mp3")
@@ -19,10 +22,10 @@ blocos = seeds[random.randint(0,len(seeds)-1)]
 visitados_x = []
 for x in range(0,20):
     visitados_x.append(x*100)
+visitados_y = []
+for y in range(0,tamanho_janela[1]//100):
+    visitados_y.append(y*100)
 bloco = 0
-janela = pygame.display.set_mode((0,0))
-tamanho_janela = pygame.display.get_window_size()
-pygame.display.set_caption("minecraft rafa edition")
 fonte = pygame.font.SysFont(None,48)
 texto = [fonte.render("1-tronco\n2-tabuas\n3-pedra\n4-folha\n5-tijolo\n6-porta\n7-vidro\n8-terra\n9-flor\ne-trocar inventario",True,(255,0,0)),fonte.render("1-crafting table\n2-fornalha\n3-bau\n4-bau duplo\n5-bedrock\n6-obsidian\n7-terra\n8-pedra\ne-trocar inventario",True,(255,0,0))]
 dia = pygame.image.load("blocos/fundo 2.png")
@@ -90,6 +93,12 @@ grama = pygame.image.load("blocos/grama.jfif")
 grama = pygame.transform.scale(grama,(100,100))
 pedra = pygame.image.load("blocos/pedra.jpg")
 pedra = pygame.transform.scale(pedra,(100,100))
+diorito = pygame.image.load("blocos/diorito.webp")
+diorito = pygame.transform.scale(diorito,(100,100))
+andesito = pygame.image.load("blocos/andesito.webp")
+andesito = pygame.transform.scale(andesito,(100,100))
+granito = pygame.image.load("blocos/granito.webp")
+granito = pygame.transform.scale(granito,(100,100))
 segredo = pygame.image.load("blocos/segredo.png")
 segredo = pygame.transform.scale(segredo,(100,100))
 mao = pygame.image.load("blocos/mao.webp")
@@ -101,7 +110,7 @@ em_execuçao = True
 frame = 1
 offset_x = 0
 offset_y = 0
-hotbar = [{49:tronco,50:tabua,51:pedregulho,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:obsidian,55:grama,56:pedra,48:mao}]
+hotbar = [{49:tronco,50:tabua,51:pedregulho,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:obsidian,55:grama,56:pedra,48:mao},{49:andesito,50:diorito,51:granito,52:pedra}]
 posiçao = 0
 menu.play()
 while em_execuçao:
@@ -219,7 +228,14 @@ while em_execuçao:
     if teclas[pygame.K_UP] and frame % 10 == 00:
         offset_y -= 100
     if teclas[pygame.K_DOWN] and frame % 10 == 00:
-        offset_y += 100
+        if not offset_y >= 5 * tamanho_janela[1]:
+            for y in range(0,tamanho_janela[1]):
+                offset_y += 100
+                if offset_y not in visitados_y:
+                    for x in visitados_x:
+                        tipo = random.randint(49,52)
+                        blocos.append([tipo,x,offset_y,2,posiçao,frame])
+            offset_y -= tamanho_janela[1] * 100 - 100
     janela.fill((0,0,255))
     janela.blit(fundos[fundo],(0,offset_y))
     for bloco in blocos:
@@ -232,5 +248,5 @@ while em_execuçao:
         if fundo >= len(fundos):
             fundo = 0
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(30)
     frame += 1
