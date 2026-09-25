@@ -23,12 +23,12 @@ visitados_x = []
 for x in range(0,20):
     visitados_x.append(x*100)
 visitados_y = []
-for y in range(0,tamanho_janela[1]//100):
+for y in range(0,tamanho_janela[1]//100+1):
     visitados_y.append(y*100)
 bloco = 0
 fonte = pygame.font.SysFont(None,48)
 texto = [fonte.render("1-tronco\n2-tabuas\n3-pedra\n4-folha\n5-tijolo\n6-porta\n7-vidro\n8-terra\n9-flor\ne-trocar inventario",True,(255,0,0)),fonte.render("1-crafting table\n2-fornalha\n3-bau\n4-bau duplo\n5-bedrock\n6-obsidian\n7-terra\n8-pedra\ne-trocar inventario",True,(255,0,0))]
-dia = pygame.image.load("blocos/fundo 2.png")
+dia = pygame.image.load("blocos/dia.jpg")
 dia = pygame.transform.scale(dia,(tamanho_janela[0],tamanho_janela[1] * 5))
 noite = pygame.image.load("blocos/noite.png")
 noite = pygame.transform.scale(noite,tamanho_janela)
@@ -235,11 +235,13 @@ while em_execuçao:
                     for x in visitados_x:
                         tipo = random.randint(49,52)
                         blocos.append([tipo,x,offset_y,2,posiçao,frame])
+                        visitados_y.append(offset_y)
             offset_y -= tamanho_janela[1] * 100 - 100
     janela.fill((0,0,255))
     janela.blit(fundos[fundo],(0,offset_y))
     for bloco in blocos:
-        janela.blit(hotbar[bloco[3]][bloco[0]],(bloco[1] - offset_x,bloco[2] - offset_y))
+        if bloco[1] >= offset_x and bloco[1] <= offset_x + tamanho_janela[0] and bloco[2] >= offset_y and bloco[2] <= offset_y + tamanho_janela[1]:
+            janela.blit(hotbar[bloco[3]][bloco[0]],(bloco[1] - offset_x,bloco[2] - offset_y))
     if mostrar:
         janela.blit(texto[itens],(0,0))
         janela.blit(mao,(tamanho_janela[0]-200,tamanho_janela[1]-200))
@@ -248,5 +250,5 @@ while em_execuçao:
         if fundo >= len(fundos):
             fundo = 0
     pygame.display.flip()
-    clock.tick(30)
+    clock.tick(60)
     frame += 1
