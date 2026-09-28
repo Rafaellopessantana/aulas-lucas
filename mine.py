@@ -85,11 +85,11 @@ grama = pygame.image.load("blocos/grama.jfif")
 grama = pygame.transform.scale(grama,(100,100))
 pedra = pygame.image.load("blocos/pedra.jpg")
 pedra = pygame.transform.scale(pedra,(100,100))
-diorito = pygame.image.load("blocos/diorito.webp")
+diorito = pygame.image.load("blocos/diorito.webp").convert()
 diorito = pygame.transform.scale(diorito,(100,100))
-andesito = pygame.image.load("blocos/andesito.webp")
+andesito = pygame.image.load("blocos/andesito.webp").convert()
 andesito = pygame.transform.scale(andesito,(100,100))
-granito = pygame.image.load("blocos/granito.webp")
+granito = pygame.image.load("blocos/granito.webp").convert()
 granito = pygame.transform.scale(granito,(100,100))
 ardosia = pygame.image.load("blocos/ardosia.jpg")
 ardosia = pygame.transform.scale(ardosia,(100,100))
@@ -258,10 +258,10 @@ while em_execuçao:
     if teclas[pygame.K_UP] and frame % 10 == 00:
         offset_y -= 100
     if teclas[pygame.K_DOWN] and frame % 10 == 00:
-        if offset_y < tamanho_janela[1] * 300 // 100:
+        if offset_y <= tamanho_janela[1] // 100 * 100 * 2:
             offset_y += 100
     janela.fill((0,0,255))
-    janela.blit(fundos[fundo],(0,offset_y))
+    janela.blit(fundos[fundo],(0,(offset_y - 2 * tamanho_janela[1] // 100) * -1))
     for bloco in blocos:
         if bloco[1] >= offset_x and bloco[1] <= offset_x + tamanho_janela[0] and bloco[2] >= offset_y and bloco[2] <= offset_y + tamanho_janela[1]:
             janela.blit(hotbar[bloco[3]][bloco[0]],(bloco[1] - offset_x,bloco[2] - offset_y))
