@@ -14,12 +14,14 @@ som_secreto = pygame.mixer.Sound("sons mine/som secreto.mp3")
 som_secreto_2 = pygame.mixer.Sound("sons mine/som secreto 2.mp3")
 botao = pygame.mixer.Sound("sons mine/botao.mp3")
 menu = pygame.mixer.Sound("sons mine/menu.mp3")
+colocar_sus = pygame.mixer.Sound("sons mine/among us 1.mp3")
+quebrar_sus = pygame.mixer.Sound("sons mine/among us 2.mp3")
 clock = pygame.time.Clock()
 visitados_x = []
 blocos = []
 bloco = 0
 fonte = pygame.font.SysFont(None,48)
-texto = [fonte.render("1-tronco\n2-tabuas\n3-pedra\n4-folha\n5-tijolo\n6-porta\n7-vidro\n8-terra\n9-flor\ne-trocar inventario",True,(255,0,0)),fonte.render("1-crafting table\n2-fornalha\n3-bau\n4-bau duplo\n5-bedrock\n6-obsidian\n7-terra\n8-pedra\ne-trocar inventario",True,(255,0,0))]
+texto = [fonte.render("1-tronco\n2-tabuas\n3-pedregulho\n4-folha\n5-tijolo\n6-porta\n7-vidro\n8-terra\n9-flor\ne-trocar inventario",True,(255,0,0)),fonte.render("1-crafting table\n2-fornalha\n3-bau\n4-bau duplo\n5-bedrock\n6-obsidian\n7-grama\n8-pedra\ne-trocar inventario",True,(255,0,0)),fonte.render("1-andesito\n2-diorito\n3-granito\n4-pedra\n5-ardosia\n6-bedrock\ne-trocar inventario",True,(255,0,0))]
 dia = pygame.image.load("blocos/dia.jpg")
 dia = pygame.transform.scale(dia,(tamanho_janela[0],tamanho_janela[1] * 5))
 noite = pygame.image.load("blocos/noite.png")
@@ -97,6 +99,12 @@ segredo = pygame.image.load("blocos/segredo.png")
 segredo = pygame.transform.scale(segredo,(100,100))
 mao = pygame.image.load("blocos/mao.webp")
 mao = pygame.transform.scale(mao,(200,200))
+among_us = pygame.image.load("blocos/among us.jpg").convert()
+among_us.set_alpha(127)
+among_us = pygame.transform.scale(among_us,(100,100))
+escuridao = pygame.Surface(tamanho_janela)
+level_de_escuridao = 0
+previw = pygame.Surface((100,100),pygame.SRCALPHA)
 mostrar = True
 id = 49
 itens = 0
@@ -104,7 +112,7 @@ em_execuçao = True
 frame = 1
 offset_x = 0
 offset_y = 0
-hotbar = [{49:tronco,50:tabua,51:pedregulho,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:obsidian,55:grama,56:pedra,48:mao},{49:andesito,50:diorito,51:granito,52:pedra,53:ardosia,54:bedrock}]
+hotbar = [{49:tronco,50:tabua,51:pedregulho,52:folha,53:tijolo,54:porta,55:vidro,56:terra,57:flor,48:segredo},{49:crafting_table,50:fornalha,51:bau,52:bau_duplo,53:bedrock,54:obsidian,55:grama,56:pedra,48:mao},{49:andesito,50:diorito,51:granito,52:pedra,53:ardosia,54:bedrock,48:among_us}]
 posiçao = 0
 for x in range(0,tamanho_janela[0]):
     offset_x -= 100
@@ -163,6 +171,8 @@ while em_execuçao:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if id == 48 and itens == 0:
                 som_secreto.play()
+            elif id == 48 and itens == 2:
+                colocar_sus.play()
             else:
                 colocar.play()
             blocos.append([id,event.pos[0] // 100 * 100 + offset_x,event.pos[1] // 100 * 100 + offset_y,itens,posiçao,frame])
@@ -170,8 +180,10 @@ while em_execuçao:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
             for bloco in blocos[::-1]:
                 if bloco[1] == event.pos[0] // 100 * 100 + offset_x and bloco[2] == event.pos[1] // 100 * 100 + offset_y:
-                    if bloco[0] == 48:
+                    if bloco[0] == 48 and itens == 0:
                         som_secreto_2.play()
+                    elif bloco[0] == 48 and itens == 2:
+                        quebrar_sus.play()
                     else:
                         quebrar.play()
                     blocos.remove(bloco)
@@ -272,6 +284,19 @@ while em_execuçao:
         fundo += 1
         if fundo >= len(fundos):
             fundo = 0
+    escuridao.set_alpha(level_de_escuridao)
+    escuridao.fill((0,0,0))
+    janela.blit(escuridao,(0,0))
+    mouse = pygame.mouse.get_pos()
+    previw.fill((0,0,0,0))
+    previw.blit(hotbar[itens][id],(0,0))
+    previw.set_alpha(127)
+    janela.blit(previw,(mouse[0] // 100 * 100,mouse[1] // 100 * 100))
     pygame.display.flip()
     clock.tick(60)
     frame += 1
+    if frame % 60 == 0:
+        if fundo == 0:
+            level_de_escuridao += 1
+        else:
+            level_de_escuridao -= 1
